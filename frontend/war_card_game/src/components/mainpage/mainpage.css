@@ -216,10 +216,16 @@
     border: 2px solid blue;
     height: 100%;
     width: 50%;
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    align-items: center;
 }
 
 .playerOne_pf_card {
-
+    border: 2px solid green;
+    width: 150px;
+    height: 250px;
 }
 
 .playerOne_pf_card.card-slot1 {
@@ -244,11 +250,17 @@
     border: 2px solid blue;
     height: 100%;
     width: 50%;
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    align-items: center;
 }
 
 
 .playerTwo_pf_card {
-
+    border: 2px solid green;
+    width: 150px;
+    height: 250px;
 }
 
 .playerTwo_pf_card.card-slot1 {
