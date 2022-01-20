@@ -1,8 +1,9 @@
 import { createStore, combineReducers, applyMiddleware, compose } from 'redux';
 import thunk from 'redux-thunk';
+import playerDeckReducer from './playerdecks'
 
 const rootReducer = combineReducers({
-
+    playerDecks: playerDeckReducer
 })
 
 let enhancer;

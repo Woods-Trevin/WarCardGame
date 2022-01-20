@@ -1,7 +1,53 @@
 import "./mainpage.css";
+import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux'
+import * as playerDecks from '../../store/playerdecks'
+const deck = require('../../deck');
 
 
 function Mainpage() {
+    const [shuffledDeck, setShuffledDeck] = useState();
+    // console.log(shuffledDeck);
+    const [playerOneCards, setPlayerOneCards] = useState();
+    const [playerTwoCards, setPlayerTwoCards] = useState();
+    const dispatch = useDispatch();
+
+
+
+
+    function shuffle(deck) {
+        let currentIndex = deck.length;
+        let randomIndex = 0;
+
+        // O(n)
+        while (currentIndex !== 0) {
+            randomIndex = Math.floor(Math.random() * currentIndex);
+            currentIndex--;
+
+            [deck[currentIndex], deck[randomIndex]] = [deck[randomIndex], deck[currentIndex]]
+        }
+        console.log(deck);
+        return deck;
+
+    }
+
+    function distributeCards(deck) {
+        let playerOneCards = deck.splice(0, 26);
+        setPlayerOneCards(playerOneCards)
+        let playerTwoCards = deck
+        setPlayerTwoCards(playerTwoCards)
+
+    }
+
+
+
+
+
+    useEffect(() => {
+        const shuffledDeck = shuffle(deck)
+        setShuffledDeck(shuffledDeck)
+        distributeCards(shuffledDeck)
+    }, [])
 
     return (
         <div className="outmost_ctnr">
@@ -25,6 +71,15 @@ function Mainpage() {
                     <div className="player_one_card eight" />
                     <div className="player_one_card nine" />
                     <div className="player_one_card ten" />
+                </div>
+                <div className='phasePrompt'>
+                    <li className='startGame_btn'
+                        onClick={() => dispatch(playerDecks.AddToDecks({ playerOneDeck: playerOneCards, playerTwoDeck: playerTwoCards }))}
+                    >
+                        Start Game
+                    </li>
+
+
                 </div>
                 <div className="card_ctnr--right">
                     <div className="player_two_card one" />
