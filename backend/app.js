@@ -10,5 +10,7 @@ app.get('/', (req, res) => {
     res.send('This is the homepage')
 });
 
-const port = 8080;
-app.listen(port, () => console.log(`Listening on port ${port}....`));
+// const port = 8080;
+// app.listen(port, () => console.log(`Listening on port ${port}....`));
+
+module.exports = app;
