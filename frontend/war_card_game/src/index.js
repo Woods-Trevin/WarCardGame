@@ -4,7 +4,6 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import configureStore from "./store";
-import { BrowserRouter } from "react-router-dom";
 import { Provider } from "react-redux";
 
 let store = configureStore();

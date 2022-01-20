@@ -1,0 +1,41 @@
+
+
+.navbar_ctnr {
+    /* border: 2px solid red; */
+    height: 70px;
+    display: block;
+}
+
+
+.navbar_inner_ctnr {
+    border-bottom: 2px solid rgba(0, 0, 0, 0.356);
+    height: 100%;
+    display: flex;
+    align-items: center;
+}
+
+
+.war_link {
+    /* border: 2px solid blue; */
+    font-size: 30px;
+    height: 100%;
+    width: 10%;
+    text-decoration: none;
+    color: black;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
+.results_link {
+    /* border: 2px solid blue; */
+    font-size: 30px;
+    height: 100%;
+    width: 10%;
+    text-decoration: none;
+    color: black;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
