@@ -9,12 +9,16 @@ import { Provider } from "react-redux";
 
 let store = configureStore();
 
+if (process.env.NODE_ENV !== 'production') {
+  window.store = store;
+
+}
+
+
 ReactDOM.render(
   <React.StrictMode>
     <Provider store={store}>
-      <BrowserRouter>
-        <App />
-      </BrowserRouter>
+      <App />
     </Provider>
   </React.StrictMode>,
   document.getElementById('root')
