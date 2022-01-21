@@ -16,22 +16,33 @@ const add_to_pTwo_deck = (deck) => {
     }
 }
 
+export const get_player_decks = () => async (dispatch) => {
+
+    const response = await fetch('/war/playerDecks')
+
+    if (response.ok) {
+        const data = await response.json()
+        await dispatch(add_to_pOne_deck(data.playerOneDeck))
+        await dispatch(add_to_pTwo_deck(data.playerTwoDeck))
+        return data
+    }
+}
 
 
-export const AddToDecks = (body) => async (dispatch) => {
 
-    const response = await fetch('/startgame', {
+export const addDecksToDatabase = (body) => async (dispatch) => {
+
+    const response = await fetch('/war/start', {
         method: "POST",
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(body)
     })
 
     if (response.ok) {
-        const responseData = await response.json();
-        console.log(responseData.response);
-        await dispatch(add_to_pOne_deck(responseData.playerOneDeck));
-        await dispatch(add_to_pTwo_deck(responseData.playerTwoDeck));
-        return responseData
+        const data = await response.json();
+        await dispatch(add_to_pOne_deck(data.playerOneDeck))
+        await dispatch(add_to_pTwo_deck(data.playerTwoDeck))
+        return data
     }
 
 }
