@@ -6,7 +6,7 @@
 .outmost_ctnr {
     /* border: 2px solid purple; */
     height: 350px;
-    background-color: rgb(3, 82, 3);;
+    background-color: rgb(5, 117, 5);
 }
 
 /*----------------------------------------------------------------*/
@@ -31,9 +31,11 @@
 /*----------------------------------------------------------------*/
 
 .cards_ctnr {
-    border: 2px solid red;
+    /* border: 2px solid red; */
+    /* border-bottom: 2px solid black; */
     display: flex;
     flex-direction: row;
+    /* height: 300px; */
     /* justify-content: space-between; */
 }
 
@@ -41,9 +43,10 @@
 
 
 .card_ctnr--left {
-    border: 2px solid black;
+    border-bottom: 2px solid black;
     width:40%;
-    height: 200px;
+    height: 300px;
+    background-color: rgb(5, 117, 5);
    
     
 }
@@ -65,7 +68,7 @@
 }
 
 .player_one_card.two {
-    outline: 2px solid black;
+    outline: 2px solid;
     position: absolute;
     top: 80px;
     left: 10%;
@@ -124,11 +127,13 @@
 /*----------------------------------------------------------------*/
 
 .phasePrompt {
-    border: 2px solid orange;
+    border-bottom: 2px solid black;
     background-color: white;
     width: 20%;
     display: flex;
     justify-content: center;
+    align-items: center;
+    /* margin-bottom: 10px; */
 }
 
 .startGame_btn {
@@ -153,12 +158,13 @@
 
 /*----------------------------------------------------------------*/
 .card_ctnr--right {
-    border: 2px solid black;
+    border-bottom: 2px solid black;
     width:40%;
-    height: 200px;
+    height: 300px;
     display: flex;
     justify-content: center;
     align-items: center;
+    background-color: rgb(5, 117, 5);
 }
 
 .player_two_card {
@@ -236,20 +242,20 @@
 /*----------------------------------------------------------------*/
 
 .playing_field {
-    border: 2px solid red;
+    /* border: 2px solid red; */
     height: 100%;
     display: flex;
-    background-color: rgb(3, 82, 3);
+    background-color: rgb(5, 117, 5);
 }
 
 /*----------------------------------------------------------------*/
 
 .pf--one{
-    border: 2px solid blue;
+    border-right: 2px solid black;
     height: 100%;
     width: 50%;
     display: flex;
-    gap: 20px;
+    gap: 5px;
     justify-content: center;
     align-items: center;
 }
@@ -279,11 +285,11 @@
 /*----------------------------------------------------------------*/
 
 .pf--two {
-    border: 2px solid blue;
+    border-left: 2px solid black;
     height: 100%;
     width: 50%;
     display: flex;
-    gap: 20px;
+    gap: 5px;
     justify-content: center;
     align-items: center;
 }
