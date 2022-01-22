@@ -75,12 +75,16 @@ function Mainpage() {
                 sessionStorage.setItem('winner', 2)
                 setPhase(Phase.Distribution)
                 sessionStorage.setItem('phase', Phase.Distribution)
+                sessionStorage.setItem('war', 'No War')
             } else if (Number(pOneCardSplit[1]) > Number(pTwoCardSplit[1])) {
                 sessionStorage.setItem('winner', 1)
                 setPhase(Phase.Distribution)
                 sessionStorage.setItem('phase', Phase.Distribution)
+                sessionStorage.setItem('war', 'No War')
             } else {
                 setPhase(Phase.War)
+                sessionStorage.setItem('phase', Phase.War)
+
             }
         } else if (!(pOneCardSplit[3] === 'false' && pTwoCardSplit[3] === 'false')) {
             //either both cards are not number cards or one card is not a number card
@@ -95,12 +99,14 @@ function Mainpage() {
                 sessionStorage.setItem('winner', 1)
                 setPhase(Phase.Distribution)
                 sessionStorage.setItem('phase', Phase.Distribution)
+                sessionStorage.setItem('war', 'No War')
 
 
             } else if (pOneVal < pTwoVal) {
                 sessionStorage.setItem('winner', 2)
                 setPhase(Phase.Distribution)
                 sessionStorage.setItem('phase', Phase.Distribution)
+                sessionStorage.setItem('war', 'No War')
 
             } else {
                 setPhase(Phase.War)
@@ -108,6 +114,54 @@ function Mainpage() {
         }
 
 
+    }
+
+    function battle(pOneFaceUp, pTwoFaceUp) {
+        let potArray = [];
+
+        if (pOneFaceUp.face === 'false' && pTwoFaceUp.face === 'false') {
+            if (Number(pOneFaceUp.number) !== Number(pTwoFaceUp.number)) {
+                let pOneFaceDownOne = pOneDeck[fd1]
+                potArray.push(pOneFaceDownOne)
+                let pOneFaceDownTwo = pOneDeck[fd2]
+                potArray.push(pOneFaceDownTwo)
+                let pOneFaceDownThree = pOneDeck[fd3]
+                potArray.push(pOneFaceDownThree)
+
+
+                let pTwoFaceDownOne = pTwoDeck[fd1]
+                potArray.push(pTwoFaceDownOne)
+                let pTwoFaceDownTwo = pTwoDeck[fd2]
+                potArray.push(pTwoFaceDownTwo)
+                let pTwoFaceDownThree = pTwoDeck[fd3]
+                potArray.push(pTwoFaceDownThree)
+                console.log(potArray, "POT ARRAY WHEN CARDS ARE NOT FCs")
+            }
+        } else {
+            let pOneFUVal = translateFC(pOneFaceUp.number)
+            let pTwoFUVal = translateFC(pTwoFaceUp.number)
+            // console.log(pOneFUVal, "FC VAL IF FC")
+            // console.log(pTwoFUVal, "FC VAL IF FC")
+            if (pOneFUVal !== pTwoFUVal) {
+                let pOneFaceDownOne = pOneDeck[fd1]
+                potArray.push(pOneFaceDownOne)
+                let pOneFaceDownTwo = pOneDeck[fd2]
+                potArray.push(pOneFaceDownTwo)
+                let pOneFaceDownThree = pOneDeck[fd3]
+                potArray.push(pOneFaceDownThree)
+
+
+                let pTwoFaceDownOne = pTwoDeck[fd1]
+                potArray.push(pTwoFaceDownOne)
+                let pTwoFaceDownTwo = pTwoDeck[fd2]
+                potArray.push(pTwoFaceDownTwo)
+                let pTwoFaceDownThree = pTwoDeck[fd3]
+                potArray.push(pTwoFaceDownThree)
+                console.log(potArray, "POT ARRAY WHEN ATLEAST ONE CARD IS FC")
+            }
+
+        }
+        return potArray;
     }
 
 
@@ -121,7 +175,7 @@ function Mainpage() {
 
     const currentPhase = sessionStorage.getItem('phase')
     const [phase, setPhase] = useState(currentPhase ? currentPhase : null)
-    console.log(phase, "CURRENT PHASE")
+    // console.log(phase, "CURRENT PHASE")
 
 
 
@@ -131,6 +185,7 @@ function Mainpage() {
         distributeCards(shuffledDeck)
 
         const data = await dispatch(playerDecks.get_player_decks())
+        await dispatch(playerDecks.getPot())
 
         if (data.playerOneDeck.length && data.playerTwoDeck.length) {
             setRenderStartBtn(false)
@@ -143,12 +198,15 @@ function Mainpage() {
         console.log("RERENDER")
         switch (phase) {
             case Phase.Draw:
-                // console.log("Draw Phase")
-                const pOneDraw = pOneDeck.shift()
-                // console.log(pOneDraw, "PONE DRAW")
-                const pTwoDraw = pTwoDeck.shift()
-                // console.log(pTwoDraw, "PTWO DRAW")
-
+                console.log("REACHED DRAW PHASE")
+                const pOneDraw = pOneDeck[0]
+                console.log(pOneDraw, "PONE DRAW")
+                const pTwoDraw = pTwoDeck[0]
+                console.log(pTwoDraw, "PTWO DRAW")
+                const payload = [
+                    pOneDraw,
+                    pTwoDraw
+                ]
                 sessionStorage.setItem("pOneDraw",
                     [
                         pOneDraw?.association,
@@ -163,7 +221,8 @@ function Mainpage() {
                         pTwoDraw?.suit,
                         pTwoDraw?.face
                     ])
-                const timeout = setTimeout(() => {
+                const timeout = setTimeout(async () => {
+                    await dispatch(playerDecks.addToPot({ drawnCards: payload }))
                     setPhase(Phase.Calculation)
                     sessionStorage.setItem('phase', Phase.Calculation)
                 }, 1000)
@@ -171,6 +230,7 @@ function Mainpage() {
                 return () => clearTimeout(timeout)
 
             case Phase.Calculation:
+                console.log("REACHED CALCULATION PHASE")
                 const pOneCard = sessionStorage.getItem("pOneDraw")
                 const pTwoCard = sessionStorage.getItem("pTwoDraw")
                 if (pOneCard && pTwoCard) {
@@ -183,15 +243,85 @@ function Mainpage() {
                 return;
             case Phase.War:
                 console.log("REACHED WAR PHASE")
+
+                let new_fu = 4
+                let pOneFaceUp = pOneDeck[new_fu]
+                console.log(pOneFaceUp, "CURRENT FACEUP PLAYER ONE")
+                let pTwoFaceUp = pTwoDeck[new_fu]
+                console.log(pTwoFaceUp, "CURRENT FACEUP PLAYER TWO")
+
+                let fd1 = 1
+                let fd2 = 2
+                let fd3 = 3
+
+                const array = battle(pOneFaceUp, pTwoFaceUp)
+                console.log(array, "FINAL POT ARRAY WHEN SOMEONE WINS")
+
+
+                while (pOneFaceUp === pTwoFaceUp) {
+
+                    let pOneFaceDownOne = pOneDeck[fd1]
+                    potArray.push(pOneFaceDownOne)
+                    let pOneFaceDownTwo = pOneDeck[fd2]
+                    potArray.push(pOneFaceDownTwo)
+                    let pOneFaceDownThree = pOneDeck[fd3]
+                    potArray.push(pOneFaceDownThree)
+
+
+                    let pTwoFaceDownOne = pTwoDeck[fd1]
+                    potArray.push(pTwoFaceDownOne)
+                    let pTwoFaceDownTwo = pTwoDeck[fd2]
+                    potArray.push(pTwoFaceDownTwo)
+                    let pTwoFaceDownThree = pTwoDeck[fd3]
+                    potArray.push(pTwoFaceDownThree)
+                    console.log(potArray, "POT ARRAY DURING AN ITERATION")
+
+                    new_fu += new_fu
+                    fd1 += new_fu
+                    fd2 += new_fu
+                    fd3 += new_fu
+
+                }
+                console.log(potArray, "FINAL POT ARRAY")
+
+
+
+
+
+
+
                 return;
             case Phase.Distribution:
                 console.log("REACHED DISTRIBUTION PHASE")
-                const playerOneCard = sessionStorage.getItem("pOneDraw")
-                const playerTwoCard = sessionStorage.getItem("pTwoDraw")
+                // const playerOneCard = sessionStorage.getItem("pOneDraw")
+                // const playerTwoCard = sessionStorage.getItem("pTwoDraw")
                 const winner = sessionStorage.getItem("winner")
+                const war = sessionStorage.getItem("war")
 
-                if (Number(winner) === 1) {
-
+                if (war === "No War") {
+                    console.log("NO WAR")
+                    if (Number(winner) === 1) {
+                        console.log('PLAYER ONE WON')
+                        const data = await dispatch(playerDecks.DeleteAndDistributePlayerCards({ winner: Number(winner) }))
+                        if (data) {
+                            const timeout = setTimeout(() => {
+                                setPhase(Phase.Draw)
+                                sessionStorage.setItem('phase', Phase.Draw)
+                            }, 1000)
+                            return () => clearTimeout(timeout)
+                        }
+                    }
+                    if (Number(winner) === 2) {
+                        console.log('PLAYER TWO WON')
+                        const data = await dispatch(playerDecks.DeleteAndDistributePlayerCards({ winner: Number(winner) }))
+                        if (data) {
+                            const timeout = setTimeout(() => {
+                                setPhase(Phase.Draw)
+                                sessionStorage.setItem('phase', Phase.Draw)
+                            }, 1000)
+                            return () => clearTimeout(timeout)
+                        }
+                    }
                 }
                 return;
             case Phase.End:
