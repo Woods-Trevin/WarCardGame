@@ -6,7 +6,7 @@ module.exports = (sequelize, DataTypes) => {
     suit: DataTypes.STRING,
     face: DataTypes.STRING
   }, {});
-  Pot.associate = function(models) {
+  Pot.associate = function (models) {
     // associations can be defined here
   };
   return Pot;
