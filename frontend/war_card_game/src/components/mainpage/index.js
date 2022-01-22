@@ -84,6 +84,7 @@ function Mainpage() {
             } else {
                 setPhase(Phase.War)
                 sessionStorage.setItem('phase', Phase.War)
+                sessionStorage.setItem('war', 'War')
 
             }
         } else if (!(pOneCardSplit[3] === 'false' && pTwoCardSplit[3] === 'false')) {
@@ -110,6 +111,8 @@ function Mainpage() {
 
             } else {
                 setPhase(Phase.War)
+                sessionStorage.setItem('phase', Phase.War)
+                sessionStorage.setItem('war', 'War')
             }
         }
 
@@ -117,47 +120,63 @@ function Mainpage() {
     }
 
     function battle(pOneFaceUp, pTwoFaceUp) {
+        let fd1 = 1
+        let fd2 = 2
+        let fd3 = 3
         let potArray = [];
 
         if (pOneFaceUp.face === 'false' && pTwoFaceUp.face === 'false') {
-            if (Number(pOneFaceUp.number) !== Number(pTwoFaceUp.number)) {
-                let pOneFaceDownOne = pOneDeck[fd1]
-                potArray.push(pOneFaceDownOne)
-                let pOneFaceDownTwo = pOneDeck[fd2]
-                potArray.push(pOneFaceDownTwo)
-                let pOneFaceDownThree = pOneDeck[fd3]
-                potArray.push(pOneFaceDownThree)
+            let pOneFaceDownOne = pOneDeck[fd1]
+            let pOneFaceDownTwo = pOneDeck[fd2]
+            let pOneFaceDownThree = pOneDeck[fd3]
 
+            let pTwoFaceDownOne = pTwoDeck[fd1]
+            let pTwoFaceDownTwo = pTwoDeck[fd2]
+            let pTwoFaceDownThree = pTwoDeck[fd3]
 
-                let pTwoFaceDownOne = pTwoDeck[fd1]
-                potArray.push(pTwoFaceDownOne)
-                let pTwoFaceDownTwo = pTwoDeck[fd2]
-                potArray.push(pTwoFaceDownTwo)
-                let pTwoFaceDownThree = pTwoDeck[fd3]
-                potArray.push(pTwoFaceDownThree)
-                console.log(potArray, "POT ARRAY WHEN CARDS ARE NOT FCs")
+            potArray.push(pOneFaceDownOne)
+            potArray.push(pOneFaceDownTwo)
+            potArray.push(pOneFaceDownThree)
+            potArray.push(pOneFaceUp)
+
+            potArray.push(pTwoFaceDownOne)
+            potArray.push(pTwoFaceDownTwo)
+            potArray.push(pTwoFaceDownThree)
+            potArray.push(pTwoFaceUp)
+            // console.log(potArray, "POT ARRAY WHEN CARDS ARE NOT FCs")
+
+            if (Number(pOneFaceUp.number) < Number(pTwoFaceUp.number)) {
+                sessionStorage.setItem('winner', 2)
+            } else {
+                sessionStorage.setItem('winner', 1)
             }
+
         } else {
+            let pOneFaceDownOne = pOneDeck[fd1]
+            let pOneFaceDownTwo = pOneDeck[fd2]
+            let pOneFaceDownThree = pOneDeck[fd3]
+
+            potArray.push(pOneFaceDownOne)
+            potArray.push(pOneFaceDownTwo)
+            potArray.push(pOneFaceDownThree)
+            potArray.push(pOneFaceUp)
+
+            let pTwoFaceDownOne = pTwoDeck[fd1]
+            let pTwoFaceDownTwo = pTwoDeck[fd2]
+            let pTwoFaceDownThree = pTwoDeck[fd3]
+
+            potArray.push(pTwoFaceDownOne)
+            potArray.push(pTwoFaceDownTwo)
+            potArray.push(pTwoFaceDownThree)
+            potArray.push(pTwoFaceUp)
+            // console.log(potArray, "POT ARRAY WHEN ATLEAST ONE CARD IS FC")
+
             let pOneFUVal = translateFC(pOneFaceUp.number)
             let pTwoFUVal = translateFC(pTwoFaceUp.number)
-            // console.log(pOneFUVal, "FC VAL IF FC")
-            // console.log(pTwoFUVal, "FC VAL IF FC")
-            if (pOneFUVal !== pTwoFUVal) {
-                let pOneFaceDownOne = pOneDeck[fd1]
-                potArray.push(pOneFaceDownOne)
-                let pOneFaceDownTwo = pOneDeck[fd2]
-                potArray.push(pOneFaceDownTwo)
-                let pOneFaceDownThree = pOneDeck[fd3]
-                potArray.push(pOneFaceDownThree)
-
-
-                let pTwoFaceDownOne = pTwoDeck[fd1]
-                potArray.push(pTwoFaceDownOne)
-                let pTwoFaceDownTwo = pTwoDeck[fd2]
-                potArray.push(pTwoFaceDownTwo)
-                let pTwoFaceDownThree = pTwoDeck[fd3]
-                potArray.push(pTwoFaceDownThree)
-                console.log(potArray, "POT ARRAY WHEN ATLEAST ONE CARD IS FC")
+            if (pOneFUVal > pTwoFUVal) {
+                sessionStorage.setItem('winner', 1)
+            } else {
+                sessionStorage.setItem('winner', 2)
             }
 
         }
@@ -225,7 +244,7 @@ function Mainpage() {
                     await dispatch(playerDecks.addToPot({ drawnCards: payload }))
                     setPhase(Phase.Calculation)
                     sessionStorage.setItem('phase', Phase.Calculation)
-                }, 1000)
+                }, 2500)
 
                 return () => clearTimeout(timeout)
 
@@ -236,7 +255,7 @@ function Mainpage() {
                 if (pOneCard && pTwoCard) {
                     const timeout = setTimeout(() => {
                         calculate(pOneCard, pTwoCard)
-                    }, 1000)
+                    }, 2500)
 
                     return () => clearTimeout(timeout)
                 }
@@ -244,36 +263,49 @@ function Mainpage() {
             case Phase.War:
                 console.log("REACHED WAR PHASE")
 
+                //getting 5th card at index 4
                 let new_fu = 4
                 let pOneFaceUp = pOneDeck[new_fu]
                 console.log(pOneFaceUp, "CURRENT FACEUP PLAYER ONE")
                 let pTwoFaceUp = pTwoDeck[new_fu]
                 console.log(pTwoFaceUp, "CURRENT FACEUP PLAYER TWO")
 
+                if (pOneFaceUp !== pTwoFaceUp) {
+                    const potArray = battle(pOneFaceUp, pTwoFaceUp)
+                    console.log(potArray, "FINAL POT ARRAY WHEN SOMEONE WINS")
+                    dispatch(playerDecks.addToPot({ drawnCards: potArray }))
+                    const timeout = setTimeout(() => {
+                        sessionStorage.setItem('phase', Phase.Distribution)
+                        setPhase(Phase.Distribution)
+                    }, 2500)
+                    return () => clearTimeout(timeout)
+                }
+                //getting all facedown cards after cards already held in pot
                 let fd1 = 1
                 let fd2 = 2
                 let fd3 = 3
 
-                const array = battle(pOneFaceUp, pTwoFaceUp)
-                console.log(array, "FINAL POT ARRAY WHEN SOMEONE WINS")
-
+                let potArray = [];
 
                 while (pOneFaceUp === pTwoFaceUp) {
 
                     let pOneFaceDownOne = pOneDeck[fd1]
-                    potArray.push(pOneFaceDownOne)
                     let pOneFaceDownTwo = pOneDeck[fd2]
-                    potArray.push(pOneFaceDownTwo)
                     let pOneFaceDownThree = pOneDeck[fd3]
-                    potArray.push(pOneFaceDownThree)
 
+                    potArray.push(pOneFaceDownOne)
+                    potArray.push(pOneFaceDownTwo)
+                    potArray.push(pOneFaceDownThree)
+                    potArray.push(pOneFaceUp)
 
                     let pTwoFaceDownOne = pTwoDeck[fd1]
-                    potArray.push(pTwoFaceDownOne)
                     let pTwoFaceDownTwo = pTwoDeck[fd2]
-                    potArray.push(pTwoFaceDownTwo)
                     let pTwoFaceDownThree = pTwoDeck[fd3]
+
+                    potArray.push(pTwoFaceDownOne)
+                    potArray.push(pTwoFaceDownTwo)
                     potArray.push(pTwoFaceDownThree)
+                    potArray.push(pTwoFaceUp)
                     console.log(potArray, "POT ARRAY DURING AN ITERATION")
 
                     new_fu += new_fu
@@ -284,11 +316,29 @@ function Mainpage() {
                 }
                 console.log(potArray, "FINAL POT ARRAY")
 
+                let pOneFUVal = translateFC(pOneFaceUp.number)
+                let pTwoFUVal = translateFC(pTwoFaceUp.number)
 
+                if (potArray) {
+                    if (pOneFUVal < pTwoFUVal) {
+                        sessionStorage.setItem('winner', 2)
+                        dispatch(playerDecks.addToPot({ drawnCards: potArray }))
+                        const timeout = setTimeout(() => {
+                            sessionStorage.setItem('phase', Phase.Distribution)
+                            setPhase(Phase.Distribution)
+                        }, 2500)
+                        return () => clearTimeout(timeout)
+                    } else {
+                        sessionStorage.setItem('winner', 1)
+                        dispatch(playerDecks.addToPot({ drawnCards: potArray }))
+                        const timeout = setTimeout(() => {
+                            sessionStorage.setItem('phase', Phase.Distribution)
+                            setPhase(Phase.Distribution)
+                        }, 2500)
+                        return () => clearTimeout(timeout)
+                    }
 
-
-
-
+                }
 
                 return;
             case Phase.Distribution:
@@ -307,7 +357,7 @@ function Mainpage() {
                             const timeout = setTimeout(() => {
                                 setPhase(Phase.Draw)
                                 sessionStorage.setItem('phase', Phase.Draw)
-                            }, 1000)
+                            }, 2500)
                             return () => clearTimeout(timeout)
                         }
                     }
@@ -318,10 +368,12 @@ function Mainpage() {
                             const timeout = setTimeout(() => {
                                 setPhase(Phase.Draw)
                                 sessionStorage.setItem('phase', Phase.Draw)
-                            }, 1000)
+                            }, 2500)
                             return () => clearTimeout(timeout)
                         }
                     }
+                } else {
+
                 }
                 return;
             case Phase.End:
