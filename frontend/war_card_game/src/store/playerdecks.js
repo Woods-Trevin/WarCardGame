@@ -42,6 +42,7 @@ const delete_distribute_player_card = (deck) => {
 
 
 
+
 export const get_player_decks = () => async (dispatch) => {
 
     const response = await fetch('/war/playerDecks')
@@ -112,6 +113,30 @@ export const addToPot = (body) => async (dispatch) => {
         return data
     }
 
+}
+
+export const recordVictory = (body) => async (dispatch) => {
+    const response = await fetch('/war/victory', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body)
+    })
+
+    if (response.ok) {
+        const data = await response.json()
+        return data
+    }
+}
+
+export const resetDatabase = () => async (dispatch) => {
+    const response = await fetch('/war/reset', {
+        method: 'DELETE'
+    })
+
+    if (response.ok) {
+        const data = await response.json()
+        return data
+    }
 }
 
 

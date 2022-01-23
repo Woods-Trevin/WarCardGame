@@ -1,6 +1,6 @@
-.body {
-    margin: 0;
-    padding: 0;
+* {
+    margin: 0px;
+    padding: 0px;
 }
 
 .outmost_ctnr {
@@ -20,11 +20,15 @@
 .player_one_count_label {
     margin-left: 10%;
     font-size: 30px;
+    position: relative;
+    top: 30px;
 }
 
 .player_two_count_label {
     margin-right: 10%;
     font-size: 30px;
+    position: relative;
+    top: 30px;
 }
 
 
@@ -123,6 +127,36 @@
     top: 120px;
     left: 10%;
 }
+.player_one_card.eleven {
+    outline: 2px solid;
+    position: absolute;
+    top: 125px;
+    left: 10%;
+}
+.player_one_card.twelve {
+    outline: 2px solid;
+    position: absolute;
+    top: 130px;
+    left: 10%;
+}
+.player_one_card.thirteen {
+    outline: 2px solid;
+    position: absolute;
+    top: 135px;
+    left: 10%;
+}
+.player_one_card.fourteen {
+    outline: 2px solid;
+    position: absolute;
+    top: 140px;
+    left: 10%;
+}
+.player_one_card.fifteen {
+    outline: 2px solid;
+    position: absolute;
+    top: 145px;
+    left: 10%;
+}
 
 /*----------------------------------------------------------------*/
 
@@ -131,6 +165,7 @@
     background-color: white;
     width: 20%;
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     /* margin-bottom: 10px; */
@@ -154,6 +189,30 @@
     cursor: pointer;
     background-color: rgba(0, 0, 0, 0.76);
 
+}
+
+.currentPhase_prompt_ctnr {
+    /* border: 2px solid red; */
+    width: 100%;
+}
+
+.currentPhase_label {
+    /* border: 2px solid purple; */
+    display: flex;
+    justify-content: center;
+    font-size: 30px;
+}
+
+.currentPhase_prompt {
+    /* border: 2px solid green; */
+    display: flex;
+    justify-content: center;
+    font-size: 50px;
+    font-weight: bolder;
+}
+
+.war {
+    color: red;
 }
 
 /*----------------------------------------------------------------*/
@@ -237,6 +296,36 @@
     top: 120px;
     right: 10%;
 }
+.player_two_card.eleven {
+    outline: 2px solid;
+    position: absolute;
+    top: 125px;
+    right: 10%;
+}
+.player_two_card.twelve {
+    outline: 2px solid;
+    position: absolute;
+    top: 130px;
+    right: 10%;
+}
+.player_two_card.thirteen {
+    outline: 2px solid;
+    position: absolute;
+    top: 135px;
+    right: 10%;
+}
+.player_two_card.fourteen {
+    outline: 2px solid;
+    position: absolute;
+    top: 140px;
+    right: 10%;
+}
+.player_two_card.fifteen {
+    outline: 2px solid;
+    position: absolute;
+    top: 145px;
+    right: 10%;
+}
 
 
 /*----------------------------------------------------------------*/
@@ -246,6 +335,15 @@
     height: 100%;
     display: flex;
     background-color: rgb(5, 117, 5);
+}
+
+.facedown {
+
+}
+
+.facedown_cardImg {
+    height: 100%;
+    width: 100%;
 }
 
 /*----------------------------------------------------------------*/
@@ -309,6 +407,11 @@
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+}
+
+.war_fd_cards_ctnr {
+    display: flex;
+    gap: 3px;
 }
 
 .playerTwo_pf_card.card-slot2 {
