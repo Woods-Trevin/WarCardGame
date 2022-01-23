@@ -9,8 +9,18 @@ app.use(morgan('dev'))
 app.use(express.json());
 
 app.get('/war/playerDecks', asyncHandler(async (req, res) => {
-    const deckOne = await PlayerDeckOne.findAll()
-    const deckTwo = await PlayerDeckTwo.findAll()
+    const deckOne = await PlayerDeckOne.findAll({
+        where: {},
+        order: [
+            ['id', 'ASC']
+        ]
+    })
+    const deckTwo = await PlayerDeckTwo.findAll({
+        where: {},
+        order: [
+            ['id', 'ASC']
+        ]
+    })
 
     res.json({ "playerOneDeck": deckOne, "playerTwoDeck": deckTwo })
 }));
@@ -38,10 +48,31 @@ app.post('/war/start', asyncHandler(async (req, res) => {
         })
     }
 
-    const deckOne = await PlayerDeckOne.findAll()
-    const deckTwo = await PlayerDeckTwo.findAll()
+    const deckOne = await PlayerDeckOne.findAll({
+        where: {},
+        order: [
+            ['id', 'ASC']
+        ]
+    })
+    const deckTwo = await PlayerDeckTwo.findAll({
+        where: {},
+        order: [
+            ['id', 'ASC']
+        ]
+    })
 
     res.json({ "playerOneDeck": deckOne, "playerTwoDeck": deckTwo })
+}));
+
+app.post('/war/victory', asyncHandler(async (req, res) => {
+    const { winner } = req.body
+    await Victory.create({
+        player: winner
+    })
+
+    res.json({
+        'victory': winner
+    })
 }));
 
 
@@ -121,8 +152,18 @@ app.post('/war/pot', asyncHandler(async (req, res) => {
         })
     }
 
-    const newPOneDeck = await PlayerDeckOne.findAll()
-    const newPTwoDeck = await PlayerDeckTwo.findAll()
+    const newPOneDeck = await PlayerDeckOne.findAll({
+        where: {},
+        order: [
+            ['id', 'ASC']
+        ]
+    })
+    const newPTwoDeck = await PlayerDeckTwo.findAll({
+        where: {},
+        order: [
+            ['id', 'ASC']
+        ]
+    })
 
     const currentPot = await Pot.findAll()
     if (currentPot) {
@@ -133,25 +174,7 @@ app.post('/war/pot', asyncHandler(async (req, res) => {
         })
     }
 }));
-// app.post('/war/pot', asyncHandler(async (req, res) => {
-//     const { drawnCards } = req.body
-//     for (let i = 0; i < drawnCards.length; i++) {
-//         let currentCard = drawnCards[i]
-//         await Pot.create({
-//             association: currentCard.association,
-//             number: currentCard.number,
-//             suit: currentCard.suit,
-//             face: currentCard.face,
-//         })
-//     }
 
-//     const currentPot = await Pot.findAll()
-//     if (currentPot) {
-//         res.json({
-//             'pot': currentPot
-//         })
-//     }
-// }));
 
 app.delete('/war/deleteCards/', asyncHandler(async (req, res) => {
     const currentPot = await Pot.findAll()
@@ -194,8 +217,18 @@ app.delete('/war/deleteCards/', asyncHandler(async (req, res) => {
 
 
     if (finished) {
-        const newPOneDeck = await PlayerDeckOne.findAll()
-        const newPTwoDeck = await PlayerDeckTwo.findAll()
+        const newPOneDeck = await PlayerDeckOne.findAll({
+            where: {},
+            order: [
+                ['id', 'ASC']
+            ]
+        })
+        const newPTwoDeck = await PlayerDeckTwo.findAll({
+            where: {},
+            order: [
+                ['id', 'ASC']
+            ]
+        })
 
         res.json({
             'newPOneDeck': newPOneDeck,
@@ -204,93 +237,27 @@ app.delete('/war/deleteCards/', asyncHandler(async (req, res) => {
 
     }
 }));
-// app.delete('/war/deleteCards/', asyncHandler(async (req, res) => {
-//     const currentPot = await Pot.findAll()
-//     const { winner } = req.body
-//     console.log(winner)
-//     for (let i = 0; i < currentPot.length; i++) {
-//         const assoc = currentPot[i].association
-//         const num = currentPot[i].number
-//         const findRecordInPOneDeck = await PlayerDeckOne.findOne({
-//             where: {
-//                 association: assoc,
-//                 number: num,
-//             }
-//         })
-//         console.log(findRecordInPOneDeck)
-//         const findRecordInPTwoDeck = await PlayerDeckTwo.findOne({
-//             where: {
-//                 association: assoc,
-//                 number: num,
-//             }
-//         })
-//         console.log(findRecordInPTwoDeck)
-
-//         if (findRecordInPOneDeck) {
-//             await PlayerDeckOne.destroy({
-//                 where: {
-//                     association: assoc,
-//                     number: num,
-//                 }
-//             })
-//         }
-
-//         if (findRecordInPTwoDeck) {
-//             await PlayerDeckTwo.destroy({
-//                 where: {
-//                     association: assoc,
-//                     number: num,
-//                 }
-//             })
-//         }
-//     }
-
-//     let finished = false;
-//     if (winner === 1) {
-//         for (let i = 0; i < currentPot.length; i++) {
-//             let currentCard = currentPot[i]
-//             await PlayerDeckOne.create({
-//                 association: currentCard.association,
-//                 number: currentCard.number,
-//                 suit: currentCard.suit,
-//                 face: currentCard.face,
-//             })
-//         }
-//         finished = true;
-
-//     }
-
-//     if (winner === 2) {
-//         for (let i = 0; i < currentPot.length; i++) {
-//             let currentCard = currentPot[i]
-//             await PlayerDeckTwo.create({
-//                 association: currentCard.association,
-//                 number: currentCard.number,
-//                 suit: currentCard.suit,
-//                 face: currentCard.face,
-//             })
-//         }
-//         finished = true;
-
-//     }
-
-//     const destroyPot = await Pot.destroy({
-//         where: {},
-//         truncate: true
-//     })
 
 
-//     if (finished) {
-//         const newPOneDeck = await PlayerDeckOne.findAll()
-//         const newPTwoDeck = await PlayerDeckTwo.findAll()
+app.delete('/war/reset/', asyncHandler(async (req, res) => {
 
-//         res.json({
-//             'newPOneDeck': newPOneDeck,
-//             'newPTwoDeck': newPTwoDeck
-//         })
+    await PlayerDeckOne.destroy({
+        where: {},
+        truncate: true,
+    })
 
-//     }
-// }));
+    await PlayerDeckTwo.destroy({
+        where: {},
+        truncate: true,
+    })
+
+    await Pot.destroy({
+        where: {},
+        truncate: true
+    })
+
+
+}));
 
 // const port = 8080;
 // app.listen(port, () => console.log(`Listening on port ${port}....`));
