@@ -2,6 +2,10 @@ import "./mainpage.css";
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux'
 import * as playerDecks from '../../store/playerdecks'
+import club from '../images/club.png'
+import spade from '../images/spade.png'
+import heart from '../images/heart.jpeg'
+import diamond from '../images/diamond.png'
 const deck = require('../../deck');
 
 
@@ -194,8 +198,13 @@ function Mainpage() {
 
     const currentPhase = sessionStorage.getItem('phase')
     const [phase, setPhase] = useState(currentPhase ? currentPhase : null)
+    const [pOneCardSuit, setPOneCardSuit] = useState();
+    const [pTwoCardSuit, setPTwoCardSuit] = useState();
+    const [pOneCardNumber, setPOneCardNumber] = useState();
+    const [pTwoCardNumber, setPTwoCardNumber] = useState();
     // console.log(phase, "CURRENT PHASE")
 
+    let OPERATIONSPEED = 1000;
 
 
     useEffect(async () => {
@@ -218,10 +227,19 @@ function Mainpage() {
         switch (phase) {
             case Phase.Draw:
                 console.log("REACHED DRAW PHASE")
-                const pOneDraw = pOneDeck[0]
+                const pOneDraw = pOneDeck.shift()
                 console.log(pOneDraw, "PONE DRAW")
-                const pTwoDraw = pTwoDeck[0]
+                const pTwoDraw = pTwoDeck.shift()
                 console.log(pTwoDraw, "PTWO DRAW")
+
+                if (!pOneDeck.length || !pTwoDeck.length) {
+                    const timeout = setTimeout(async () => {
+                        setPhase(Phase.End)
+                        sessionStorage.setItem('phase', Phase.End)
+                    }, OPERATIONSPEED)
+                    return () => clearTimeout(timeout)
+                }
+
                 const payload = [
                     pOneDraw,
                     pTwoDraw
@@ -233,6 +251,12 @@ function Mainpage() {
                         pOneDraw?.suit,
                         pOneDraw?.face
                     ])
+                sessionStorage.setItem("pOneCardSuit", pOneDraw?.suit)
+                sessionStorage.setItem("pOneCardNum", pOneDraw?.number)
+                setPOneCardSuit(sessionStorage.getItem("pOneCardSuit"))
+                setPOneCardNumber(sessionStorage.getItem("pOneCardNum"))
+
+
                 sessionStorage.setItem("pTwoDraw",
                     [
                         pTwoDraw?.association,
@@ -240,11 +264,17 @@ function Mainpage() {
                         pTwoDraw?.suit,
                         pTwoDraw?.face
                     ])
+                sessionStorage.setItem("pTwoCardSuit", pTwoDraw?.suit)
+                sessionStorage.setItem("pTwoCardNum", pTwoDraw?.number)
+                setPTwoCardSuit(sessionStorage.getItem("pTwoCardSuit"))
+                setPTwoCardNumber(sessionStorage.getItem("pTwoCardNum"))
+
+
+                await dispatch(playerDecks.addToPot({ drawnCards: payload }))
                 const timeout = setTimeout(async () => {
-                    await dispatch(playerDecks.addToPot({ drawnCards: payload }))
                     setPhase(Phase.Calculation)
                     sessionStorage.setItem('phase', Phase.Calculation)
-                }, 2500)
+                }, OPERATIONSPEED)
 
                 return () => clearTimeout(timeout)
 
@@ -255,7 +285,7 @@ function Mainpage() {
                 if (pOneCard && pTwoCard) {
                     const timeout = setTimeout(() => {
                         calculate(pOneCard, pTwoCard)
-                    }, 2500)
+                    }, OPERATIONSPEED)
 
                     return () => clearTimeout(timeout)
                 }
@@ -270,6 +300,14 @@ function Mainpage() {
                 let pTwoFaceUp = pTwoDeck[new_fu]
                 console.log(pTwoFaceUp, "CURRENT FACEUP PLAYER TWO")
 
+                if (!pTwoFaceUp || !pOneFaceUp) {
+                    const timeout = setTimeout(async () => {
+                        setPhase(Phase.End)
+                        sessionStorage.setItem('phase', Phase.End)
+                    }, OPERATIONSPEED)
+                    return () => clearTimeout(timeout)
+                }
+
                 if (pOneFaceUp !== pTwoFaceUp) {
                     const potArray = battle(pOneFaceUp, pTwoFaceUp)
                     console.log(potArray, "FINAL POT ARRAY WHEN SOMEONE WINS")
@@ -277,7 +315,7 @@ function Mainpage() {
                     const timeout = setTimeout(() => {
                         sessionStorage.setItem('phase', Phase.Distribution)
                         setPhase(Phase.Distribution)
-                    }, 2500)
+                    }, OPERATIONSPEED)
                     return () => clearTimeout(timeout)
                 }
                 //getting all facedown cards after cards already held in pot
@@ -324,17 +362,19 @@ function Mainpage() {
                         sessionStorage.setItem('winner', 2)
                         dispatch(playerDecks.addToPot({ drawnCards: potArray }))
                         const timeout = setTimeout(() => {
+                            sessionStorage.setItem('war', 'War')
                             sessionStorage.setItem('phase', Phase.Distribution)
                             setPhase(Phase.Distribution)
-                        }, 2500)
+                        }, OPERATIONSPEED)
                         return () => clearTimeout(timeout)
                     } else {
                         sessionStorage.setItem('winner', 1)
                         dispatch(playerDecks.addToPot({ drawnCards: potArray }))
                         const timeout = setTimeout(() => {
+                            sessionStorage.setItem('war', 'War')
                             sessionStorage.setItem('phase', Phase.Distribution)
                             setPhase(Phase.Distribution)
-                        }, 2500)
+                        }, OPERATIONSPEED)
                         return () => clearTimeout(timeout)
                     }
 
@@ -357,7 +397,7 @@ function Mainpage() {
                             const timeout = setTimeout(() => {
                                 setPhase(Phase.Draw)
                                 sessionStorage.setItem('phase', Phase.Draw)
-                            }, 2500)
+                            }, OPERATIONSPEED)
                             return () => clearTimeout(timeout)
                         }
                     }
@@ -368,12 +408,34 @@ function Mainpage() {
                             const timeout = setTimeout(() => {
                                 setPhase(Phase.Draw)
                                 sessionStorage.setItem('phase', Phase.Draw)
-                            }, 2500)
+                            }, OPERATIONSPEED)
                             return () => clearTimeout(timeout)
                         }
                     }
                 } else {
-
+                    console.log("WAR")
+                    if (Number(winner) === 1) {
+                        console.log('PLAYER ONE WON WAR')
+                        const data = await dispatch(playerDecks.DeleteAndDistributePlayerCards({ winner: Number(winner) }))
+                        if (data) {
+                            const timeout = setTimeout(() => {
+                                setPhase(Phase.Draw)
+                                sessionStorage.setItem('phase', Phase.Draw)
+                            }, OPERATIONSPEED)
+                            return () => clearTimeout(timeout)
+                        }
+                    }
+                    if (Number(winner) === 2) {
+                        console.log('PLAYER TWO WON WAR')
+                        const data = await dispatch(playerDecks.DeleteAndDistributePlayerCards({ winner: Number(winner) }))
+                        if (data) {
+                            const timeout = setTimeout(() => {
+                                setPhase(Phase.Draw)
+                                sessionStorage.setItem('phase', Phase.Draw)
+                            }, OPERATIONSPEED)
+                            return () => clearTimeout(timeout)
+                        }
+                    }
                 }
                 return;
             case Phase.End:
@@ -447,11 +509,32 @@ function Mainpage() {
 
                     </div>
                     <div className="playerOne_pf_card card-slot4">
-
+                        <div className="top_suit_ctnr--left">
+                            <li className="card_num">{pOneCardNumber}</li>
+                            <img src={(pOneCardSuit === 'Club' ? club : undefined) || (pOneCardSuit === 'Heart' ? heart : undefined) || (pOneCardSuit === 'Diamond' ? diamond : undefined) || (pOneCardSuit === 'Spade' ? spade : undefined)} className="suit--top" />
+                        </div>
+                        <div className="mid_suit_ctnr">
+                            <img src={(pOneCardSuit === 'Club' ? club : undefined) || (pOneCardSuit === 'Heart' ? heart : undefined) || (pOneCardSuit === 'Diamond' ? diamond : undefined) || (pOneCardSuit === 'Spade' ? spade : undefined)} className="suit--mid" />
+                        </div>
+                        <div className="bottom_suit_ctnr--left">
+                            <img src={(pOneCardSuit === 'Club' ? club : undefined) || (pOneCardSuit === 'Heart' ? heart : undefined) || (pOneCardSuit === 'Diamond' ? diamond : undefined) || (pOneCardSuit === 'Spade' ? spade : undefined)} className="suit--bottom" />
+                            <li className="card_num">{pOneCardNumber}</li>
+                        </div>
                     </div>
                 </div>
                 <div className="pf--two">
                     <div className="playerTwo_pf_card card-slot1">
+                        <div className="top_suit_ctnr--right">
+                            <li className="card_num" >{pTwoCardNumber}</li>
+                            <img src={(pTwoCardSuit === 'Club' ? club : undefined) || (pTwoCardSuit === 'Heart' ? heart : undefined) || (pTwoCardSuit === 'Diamond' ? diamond : undefined) || (pTwoCardSuit === 'Spade' ? spade : undefined)} className="suit--top" />
+                        </div>
+                        <div className="mid_suit_ctnr">
+                            <img src={(pTwoCardSuit === 'Club' ? club : undefined) || (pTwoCardSuit === 'Heart' ? heart : undefined) || (pTwoCardSuit === 'Diamond' ? diamond : undefined) || (pTwoCardSuit === 'Spade' ? spade : undefined)} className="suit--mid" />
+                        </div>
+                        <div className="bottom_suit_ctnr--right">
+                            <img src={(pTwoCardSuit === 'Club' ? club : undefined) || (pTwoCardSuit === 'Heart' ? heart : undefined) || (pTwoCardSuit === 'Diamond' ? diamond : undefined) || (pTwoCardSuit === 'Spade' ? spade : undefined)} className="suit--bottom" />
+                            <li className="card_num">{pTwoCardNumber}</li>
+                        </div>
 
                     </div>
                     <div className="playerTwo_pf_card card-slot2">

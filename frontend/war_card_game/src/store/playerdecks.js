@@ -4,6 +4,7 @@ const ADD_TO_POT = 'pot/ADD_TO_POT';
 const GET_POT = 'pot/GET_POT';
 const DELETE_DISTRIBUTE_PLAYER_CARDS = 'delete/DELETE_DISTRIBUTE_PLAYER_CARDS';
 
+
 const add_cards_to_decks = (deck) => {
     return {
         type: ADD_CARDS_TO_DECKS,
@@ -40,6 +41,7 @@ const delete_distribute_player_card = (deck) => {
 }
 
 
+
 export const get_player_decks = () => async (dispatch) => {
 
     const response = await fetch('/war/playerDecks')
@@ -54,6 +56,7 @@ export const get_player_decks = () => async (dispatch) => {
 
 
 export const addDecksToDatabase = (body) => async (dispatch) => {
+    console.log(body)
 
     const response = await fetch('/war/start', {
         method: "POST",
@@ -105,11 +108,13 @@ export const addToPot = (body) => async (dispatch) => {
 
     if (response.ok) {
         const data = await response.json()
-        dispatch(add_to_pot(data.pot))
+        dispatch(add_to_pot({ pot: data.pot, newPOneDeck: data.newPlayerOneDeck, newPTwoDeck: data.newPlayerTwoDeck }))
         return data
     }
 
 }
+
+
 
 
 
@@ -130,7 +135,9 @@ const playerDeckReducer = (state = initialState, action) => {
             return newState;
         case ADD_TO_POT:
             newState = Object.assign({}, state);
-            newState.pot = action.payload;
+            newState.pot = action.payload.pot;
+            newState.playerOneDeck = action.payload.newPOneDeck;
+            newState.playerTwoDeck = action.payload.newPTwoDeck;
             return newState;
         case GET_POT:
             newState = Object.assign({}, state);

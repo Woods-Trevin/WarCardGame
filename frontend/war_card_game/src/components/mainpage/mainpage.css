@@ -279,7 +279,10 @@
 }
 
 .playerOne_pf_card.card-slot4 {
-
+    background-color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
 
 /*----------------------------------------------------------------*/
@@ -302,7 +305,10 @@
 }
 
 .playerTwo_pf_card.card-slot1 {
-
+    background-color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
 
 .playerTwo_pf_card.card-slot2 {
@@ -314,5 +320,69 @@
 }
 
 .playerTwo_pf_card.card-slot4 {
+    
+}
 
+/*------------------------------------------------------------------*/
+
+.top_suit_ctnr--left {
+    /* border: 2px solid red; */
+    display: flex;
+    
+    
+}
+.top_suit_ctnr--right {
+    /* border: 2px solid red; */
+    display: flex;
+    justify-content: flex-end;
+    
+}
+
+
+.suit--top {
+    width: 20px;
+    height: 20px;
+    
+}
+
+
+.mid_suit_ctnr {
+    /* border: 2px solid blue; */
+    display: flex;
+    justify-content: center;
+
+}
+
+.suit--mid {
+    width: 75px;
+    height: 75px;
+    
+}
+
+
+.bottom_suit_ctnr--left {
+    /* border: 2px solid green; */
+    display: flex;
+    justify-content: flex-end;
+    
+}
+
+.bottom_suit_ctnr--right {
+    /* border: 2px solid green; */
+    display: flex;
+    justify-content: flex-start;
+    
+}
+
+.suit--bottom {
+    width: 20px;
+    height: 20px;
+    
+}
+
+
+.card_num {
+    list-style: none;
+    margin-left: 3px;
+    margin-right: 3px;
 }
