@@ -40,24 +40,31 @@ War uses Express for the backend interacting with Postgres as the database for p
 
 #### Express
 I chose to use a very simple implementation of Express without using express router since there was no need for multiple specific routes. The two specific endpoints to pay attention to are the POST '/war/start' and POST '/war/victory': 
+
 -The former starts the game by taking the decks sent from the frontend in a fetch request and filling the respective player deck tables with cards. After the cards are populated there is a query for all elements in each table, ordered by id in ascending order, to be sent in a response to the frontend. 
+
 -The latter is only triggered when the End Phase occurs signifying the end of the game. The only purpose of this endpoint is to store who wins in.
 
 There are other endpoints that are important as well!
 
 GET '/war/playerDecks'
+
 -This endpoint collects all of the cards in each player deck table ordered by id in ascending order and sends each deck in a response to the frontend. The
 
 GET '/war/pot'
+
 -This endpoint collects all of the cards in the pot table and sends those cards in a response to the frontend.
 
 POST '/war/pot'
+
 -This endpoint takes cards sent to the backend by frontend fetch requests. These cards are in an array form so it was easy to loop over the "drawnCards" array and search for cards that belonged to either deck. When a card is found it is destroyed in the player deck table it belongs to. Then that same card is added to the pot. In the case of duplicates in the player deck table there is a secondary loop that destroys each duplicate. After overarching loop completes then each player deck table is queried for all cards remaining in either deck ordered by id in descending order. The new decks are sent in response to the frontend.
 
 DELETE '/war/deleteCards/'
+
 -This endpoint checks for the winner signifier sent to the backend and dependent on the winner the cards are taken from the pot and added to that winners deck table. The cards in the pot are deleted. In the end the player deck tables are queried for all remaining cards and each deck is sent in response to the frontend.
 
 DELETE '/war/reset/'
+
 -This endpoint is to delete every element from either table excluding victories.
 
 
