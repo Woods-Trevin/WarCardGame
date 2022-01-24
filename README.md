@@ -15,6 +15,9 @@ If the cards are the same rank, it is War. Each player turns up one card face do
 If a player runs out of cards or does not have enough cards for the war phase, that player loses.
 
 
+
+##GAME TAKES ANYWHERE FROM 10-20 MINUTES TO FINISH
+
 ## Setup
 
 1. clone repo
