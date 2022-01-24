@@ -41,15 +41,15 @@ War uses Express for the backend interacting with Postgres as the database for p
 #### Express
 I chose to use a very simple implementation of Express without using express router since there was no need for multiple specific routes. The two specific endpoints to pay attention to are the POST '/war/start' and POST '/war/victory': 
 
--The former starts the game by taking the decks sent from the frontend in a fetch request and filling the respective player deck tables with cards. After the cards are populated there is a query for all elements in each table, ordered by id in ascending order, to be sent in a response to the frontend. 
+- The former starts the game by taking the decks sent from the frontend in a fetch request and filling the respective player deck tables with cards. After the cards are populated there is a query for all elements in each table, ordered by id in ascending order, to be sent in a response to the frontend. 
 
--The latter is only triggered when the End Phase occurs signifying the end of the game. The only purpose of this endpoint is to store who wins in.
+- The latter is only triggered when the End Phase occurs signifying the end of the game. The only purpose of this endpoint is to store who wins in.
 
 There are other endpoints that are important as well!
 
 GET '/war/playerDecks'
 
--This endpoint collects all of the cards in each player deck table ordered by id in ascending order and sends each deck in a response to the frontend. The
+- This endpoint collects all of the cards in each player deck table ordered by id in ascending order and sends each deck in a response to the frontend. The
 
 GET '/war/pot'
 
