@@ -24,7 +24,7 @@ If a player runs out of cards or does not have enough cards for the war phase, t
 
 2. Inside backend directory run `npm install`
 
-3. Inside war_card_game run `npm install`
+3. Inside war_card_game directory run `npm install`
 
 4. Type `psql` in cmd-line to open postgres. Copy paste `CREATE USER "war_user" WITH PASSWORD "war_user_password" createdb;` in terminal.
 
