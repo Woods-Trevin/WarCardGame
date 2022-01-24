@@ -16,7 +16,7 @@ If a player runs out of cards or does not have enough cards for the war phase, t
 
 
 
-##GAME TAKES ANYWHERE FROM 10-20 MINUTES TO FINISH
+## GAME TAKES ANYWHERE FROM 10-20 MINUTES TO FINISH
 
 ## Setup
 
