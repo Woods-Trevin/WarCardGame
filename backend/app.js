@@ -75,6 +75,17 @@ app.post('/war/victory', asyncHandler(async (req, res) => {
     })
 }));
 
+app.get('/war/playerDecks/:id', asyncHandler(async (req, res) => {
+    if (req.params.id === 1) {
+
+    }
+
+    if (req.params.id === 2) {
+
+    }
+
+}));
+
 
 app.get('/war/pot', asyncHandler(async (req, res) => {
     const pot = await Pot.findAll()
@@ -254,6 +265,16 @@ app.delete('/war/reset/', asyncHandler(async (req, res) => {
     await Pot.destroy({
         where: {},
         truncate: true
+    })
+
+    const emptyDeckOne = PlayerDeckOne.findAll()
+    const emptyDeckTwo = PlayerDeckTwo.findAll()
+    const emptyPot = Pot.findAll()
+
+    res.json({
+        'emptyDeckOne': emptyDeckOne,
+        'emptyDeckTwo': emptyDeckTwo,
+        'emptyPot': emptyPot
     })
 
 
