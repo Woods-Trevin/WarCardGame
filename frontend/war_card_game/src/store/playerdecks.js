@@ -3,6 +3,7 @@ const GET_DECKS = 'decks/GET_DECKS';
 const ADD_TO_POT = 'pot/ADD_TO_POT';
 const GET_POT = 'pot/GET_POT';
 const DELETE_DISTRIBUTE_PLAYER_CARDS = 'delete/DELETE_DISTRIBUTE_PLAYER_CARDS';
+const EMPTY_DECKS_AND_POT = 'delete/EMPTY_DECKS_AND_POT';
 
 
 const add_cards_to_decks = (deck) => {
@@ -39,6 +40,14 @@ const delete_distribute_player_card = (deck) => {
         payload: deck
     }
 }
+
+const empty_decks_and_pot = (data) => {
+    return {
+        type: EMPTY_DECKS_AND_POT,
+        payload: data
+    }
+}
+
 
 
 
@@ -135,6 +144,16 @@ export const resetDatabase = () => async (dispatch) => {
 
     if (response.ok) {
         const data = await response.json()
+        dispatch(empty_decks_and_pot({ 'emptyDeckOne': data.emptyDeckOne, 'emptyDeckTwo': data.emptyDeckTwo, 'emptyPot': data.emptyPot }))
+        return data
+    }
+}
+
+export const emptyPotForWinner = (body) => async (dispatch) => {
+    const response = await fetch(`/war/distributePot/${body.idx}`)
+
+    if (response.ok) {
+        const data = await response.json()
         return data
     }
 }
@@ -172,6 +191,12 @@ const playerDeckReducer = (state = initialState, action) => {
             newState = Object.assign({}, state);
             newState.playerOneDeck = action.payload.dataOne;
             newState.playerTwoDeck = action.payload.dataTwo;
+            return newState;
+        case EMPTY_DECKS_AND_POT:
+            newState = Object.assign({}, state);
+            newState.playerOneDeck = action.payload.emptyDeckOne;
+            newState.playerTwoDeck = action.payload.emptyDeckTwo;
+            newState.pot = action.payload.emptyPot
             return newState;
         default:
             return state;

@@ -11,7 +11,7 @@ const deck = require('../../deck');
 
 
 function Mainpage() {
-    // const [shuffledDeck, setShuffledDeck] = useState();
+    const [shuffledDeck, setShuffledDeck] = useState();
     // console.log(shuffledDeck);
     const [playerOneCards, setPlayerOneCards] = useState();
     const [playerTwoCards, setPlayerTwoCards] = useState();
@@ -28,15 +28,23 @@ function Mainpage() {
 
 
     function shuffle(deck) {
-        let currentIndex = deck.length;
-        let randomIndex = 0;
+        // let currentIndex = deck.length;
+        // let randomIndex = 0;
 
-        // O(n)
-        while (currentIndex !== 0) {
-            randomIndex = Math.floor(Math.random() * currentIndex);
-            currentIndex--;
+        // // O(n)
+        // while (currentIndex !== 0) {
+        //     randomIndex = Math.floor(Math.random() * (currentIndex + 1));
+        //     currentIndex--;
 
-            [deck[currentIndex], deck[randomIndex]] = [deck[randomIndex], deck[currentIndex]]
+        //     [deck[currentIndex], deck[randomIndex]] = [deck[randomIndex], deck[currentIndex]]
+        // }
+
+        for (let i = deck.length - 1; i > 0; i--) {
+            const randomIndex = Math.floor(Math.random() * (i + 1));
+            const otherVal = deck[randomIndex]
+            deck[randomIndex] = deck[i]
+            deck[i] = otherVal
+
         }
         // console.log(deck);
         return deck;
@@ -213,6 +221,7 @@ function Mainpage() {
         War: 'War',
         Distribution: 'Distribution',
         End: 'End',
+        Reset: 'Reset',
     }
 
     const currentPhase = sessionStorage.getItem('phase')
@@ -228,13 +237,13 @@ function Mainpage() {
     // console.log(phase, "CURRENT PHASE")
 
 
-    let OPERATIONSPEED = 2000;
+    let OPERATIONSPEED = 1000;
 
 
     useEffect(async () => {
 
         const shuffledDeck = shuffle(deck)
-        // setShuffledDeck(shuffledDeck)
+        setShuffledDeck(shuffledDeck)
         distributeCards(shuffledDeck)
 
         await dispatch(playerDecks.get_player_decks())
@@ -271,13 +280,6 @@ function Mainpage() {
 
                 if (!pOneDeck.length || !pTwoDeck.length) {
                     const timeout = setTimeout(async () => {
-
-                        if (pOneDeck.length > pTwoDeck.length) {
-                            sessionStorage.setItem('FinalWinner', 1)
-
-                        } else {
-                            sessionStorage.setItem('FinalWinner', 2)
-                        }
                         setPhase(Phase.End)
                         sessionStorage.setItem('phase', Phase.End)
                     }, OPERATIONSPEED)
@@ -339,9 +341,15 @@ function Mainpage() {
 
                 //getting 5th card at index 4
                 let new_fu = 4
+
                 let pOneFaceUp = pOneDeck[new_fu]
+                setPOneCardSuit(pOneFaceUp?.suit)
+                setPOneCardNumber(pOneFaceUp?.number)
                 console.log(pOneFaceUp, "CURRENT FACEUP PLAYER ONE")
+
                 let pTwoFaceUp = pTwoDeck[new_fu]
+                setPTwoCardSuit(pTwoFaceUp?.suit)
+                setPTwoCardNumber(pTwoFaceUp?.number)
                 console.log(pTwoFaceUp, "CURRENT FACEUP PLAYER TWO")
 
                 if (!pTwoFaceUp || !pOneFaceUp) {
@@ -494,7 +502,7 @@ function Mainpage() {
                 const data = await dispatch(playerDecks.recordVictory({ winner: finalWinner }))
                 if (data) {
                     const timeout = setTimeout(() => {
-                        sessionStorage.removeItem('phase')
+                        setPhase(Phase.Reset)
                     }, OPERATIONSPEED)
                     return () => clearTimeout(timeout)
                 }
@@ -545,7 +553,7 @@ function Mainpage() {
                     >
                         Start Game
                     </li>}
-                    {phase &&
+                    {(phase && phase !== Phase.Reset) &&
                         <div className="currentPhase_prompt_ctnr">
                             <p className="currentPhase_label">
                                 Phase:
@@ -555,7 +563,7 @@ function Mainpage() {
                             </p>
                         </div>
                     }
-                    {(!phase && !renderStartBtn) &&
+                    {(phase === Phase.Reset && !renderStartBtn) &&
                         <div>
                             <li className="reset_btn" onClick={async () => {
                                 sessionStorage.removeItem('pOneCardSuit')
@@ -569,8 +577,12 @@ function Mainpage() {
                                 sessionStorage.removeItem('pTwoDraw')
                                 sessionStorage.removeItem('phase')
                                 sessionStorage.removeItem('startedGame')
-                                await dispatch(playerDecks.resetDatabase())
-                                setPhase('Reset')
+                                const data = await dispatch(playerDecks.resetDatabase())
+                                if (data) {
+                                    window.location.reload()
+                                    setRenderStartBtn(true)
+                                }
+
                             }}>
                                 Reset
                             </li>
