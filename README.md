@@ -22,17 +22,25 @@ If a player runs out of cards or does not have enough cards for the war phase, t
 
 1. clone repo
 
-2. cd inside of backend directory then run "npm install"
+2. Inside backend directory run `npm install`
 
-3. cd inside fo war_card_game directory then run "npm install"
+3. Inside war_card_game run `npm install`
 
-4. open 2 terminals
+4. Type `psql` in cmd-line to open postgres. Copy paste `CREATE USER "war_user" WITH PASSWORD "war_user_password" createdb;` in terminal.
 
-5. In terminal 1 cd inside of backend directory then run "npm start"
+5. In cmd-line run `npx sequelize-cli db:create` to create database
 
-6. In terminal 2 cd inside of war_card_game directory then run "npm start"
+6. Lastly, In cmd-line run `npx sequelize-cli db:migrate` to add tables to database.
 
-7. Click "start game" to run simulation.
+
+
+## Start
+
+1. run `npm start` in seperate terminal in backend directory
+
+2. run `npm start` in seperate terminal in war_card_game directory
+
+3. Click `start game` to run simulation.
 
 ## Application Architecture
 
