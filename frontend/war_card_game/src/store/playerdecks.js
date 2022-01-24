@@ -83,7 +83,7 @@ export const addDecksToDatabase = (body) => async (dispatch) => {
 }
 
 export const DeleteAndDistributePlayerCards = (body) => async (dispatch) => {
-    const response = await fetch(`/war/deleteCards/`, {
+    const response = await fetch(`/war/deleteAndAddCards/`, {
         method: "Delete",
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(body)

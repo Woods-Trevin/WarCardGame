@@ -75,17 +75,6 @@ app.post('/war/victory', asyncHandler(async (req, res) => {
     })
 }));
 
-app.get('/war/playerDecks/:id', asyncHandler(async (req, res) => {
-    if (req.params.id === 1) {
-
-    }
-
-    if (req.params.id === 2) {
-
-    }
-
-}));
-
 
 app.get('/war/pot', asyncHandler(async (req, res) => {
     const pot = await Pot.findAll()
@@ -187,7 +176,7 @@ app.post('/war/pot', asyncHandler(async (req, res) => {
 }));
 
 
-app.delete('/war/deleteCards/', asyncHandler(async (req, res) => {
+app.delete('/war/deleteAndAddCards/', asyncHandler(async (req, res) => {
     const currentPot = await Pot.findAll()
     const { winner } = req.body
     console.log(winner)
