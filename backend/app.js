@@ -64,11 +64,35 @@ app.post('/war/start', asyncHandler(async (req, res) => {
     res.json({ "playerOneDeck": deckOne, "playerTwoDeck": deckTwo })
 }));
 
+
+app.get('/war/victory', asyncHandler(async (req, res) => {
+    const victories = await Victory.findAll({
+        where: {},
+        order: [
+            ['createdAt', 'ASC']
+        ]
+    })
+
+    res.json({
+        'victories': victories
+    })
+}));
+
+
 app.post('/war/victory', asyncHandler(async (req, res) => {
     const { winner } = req.body
-    await Victory.create({
-        player: winner
-    })
+
+    if (winner === '1') {
+        await Victory.create({
+            player: 'Player One Wins!'
+        })
+    }
+
+    if (winner === '2') {
+        await Victory.create({
+            player: 'Player Two Wins!'
+        })
+    }
 
     res.json({
         'victory': winner

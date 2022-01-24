@@ -503,6 +503,7 @@ function Mainpage() {
                 if (data) {
                     const timeout = setTimeout(() => {
                         setPhase(Phase.Reset)
+                        sessionStorage.removeItem('phase')
                     }, OPERATIONSPEED)
                     return () => clearTimeout(timeout)
                 }

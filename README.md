@@ -84,6 +84,9 @@ DELETE '/war/reset/'
 
 - This endpoint is to delete every element from either table excluding victories.
 
+GET '/war/victory'
+- This endpoint retrieves all victories since starting the app in ascending order.
+
 
 #### Postgres
 Postgres was an easy choice for my server-side framework. Postgres allows easy communication between the database and the backend server. I find it very straightforward to use.
