@@ -14,6 +14,23 @@ If the cards are the same rank, it is War. Each player turns up one card face do
 
 If a player runs out of cards or does not have enough cards for the war phase, that player loses.
 
+
+## Setup
+
+1. clone repo
+
+2. cd inside of backend directory then run "npm install"
+
+3. cd inside fo war_card_game directory then run "npm install"
+
+4. open 2 terminals
+
+5. In terminal 1 cd inside of backend directory then run "npm start"
+
+6. In terminal 2 cd inside of war_card_game directory then run "npm start"
+
+7. Click "start game" to run simulation.
+
 ## Application Architecture
 
 This application is a fullstack Postgres, Express, React.js/Redux, and Node.js application. The backend interacts with the frontend by responding to frontend fetch requests, and fetching data from the Postgres database. The frontend displays this information to the user.
