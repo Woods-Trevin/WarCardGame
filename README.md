@@ -16,7 +16,7 @@ If a player runs out of cards or does not have enough cards for the war phase, t
 
 
 
-## GAME TAKES ANYWHERE FROM 10-20 MINUTES TO FINISH
+## GAME TAKES ANYWHERE FROM 5-20 MINUTES TO FINISH!! Kick back and let it run in the browser while you watch the new Witcher season on netflix ;).
 
 ## Setup
 
@@ -28,9 +28,9 @@ If a player runs out of cards or does not have enough cards for the war phase, t
 
 4. Type `psql` in cmd-line to open postgres (or however you open postgres). Copy paste `CREATE USER "war_user" WITH PASSWORD "war_user_password" createdb;` in terminal.
 
-5. In cmd-line run `npx sequelize-cli db:create` to create database
+5. Go back to the terminal. Inside of the backend directory run `npx sequelize-cli db:create` to create database
 
-6. Lastly, In cmd-line run `npx sequelize-cli db:migrate` to add tables to database.
+6. Lastly, run `npx sequelize-cli db:migrate` to add tables to database.
 
 
 
