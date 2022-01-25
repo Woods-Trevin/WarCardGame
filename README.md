@@ -24,7 +24,7 @@ If a player runs out of cards or does not have enough cards for the war phase, t
 
 2. Inside backend directory run `npm install`
 
-3. Inside war_card_game directory run `npm install`
+3. Inside frontend directory run `npm install`
 
 4. Type `psql` in cmd-line to open postgres (or however you open postgres). Copy paste `CREATE USER "war_user" WITH PASSWORD "war_user_password" createdb;` in terminal.
 
@@ -38,7 +38,7 @@ If a player runs out of cards or does not have enough cards for the war phase, t
 
 1. run `npm start` in seperate terminal in backend directory
 
-2. run `npm start` in seperate terminal in war_card_game directory
+2. run `npm start` in seperate terminal in frontend directory
 
 3. Click `start game` to run simulation.
 
