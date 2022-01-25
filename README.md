@@ -107,6 +107,6 @@ Postgres was an easy choice for my server-side framework. Postgres allows easy c
 ## Conclusion and Possible Next Steps
 This application was a lot of fun to build. There were some hiccups along the way for example needing to order information coming from the backend in a specific order to prevent cards magically shooting to the top of the deck. All in all this was a great learning experience for me. Building a sort of autonomous system has definitely been a bucketlist thing for me. Finally doing something autonomous outside of practice problems but in an actual application has shown me just how much I have grown as a developer in all aspects of the FullStack Development process.
 
-Given more time I would like to put more indicators for when cards are distributed or when a player actually wins. Maybe a +2 somewhere on the screen or an actual prompt stating who was the winner. I would also like to refactor the application to be player vs computer instead of computer vs computer.
+Given more time I would like to put more indicators for when cards are distributed or when a player actually wins. Maybe a +2 somewhere on the screen or an actual prompt stating who was the winner. I would also like to refactor the application to be player vs computer instead of computer vs computer. I would also like to test the application a little more for double wars. Currently the application is not capabale of handling that part of the game.
 
 
