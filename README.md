@@ -42,6 +42,8 @@ If a player runs out of cards or does not have enough cards for the war phase, t
 
 3. Click `start game` on webpage to run simulation.
 
+- There is a variable called `OPERATIONSPEED` on line 241 of the index.js file of the mainpage component. You can adjust this value to control how fast the app runs. 1000 ms has been the safest option and is what the value is set to. You could try 500 ms but the application may act erratically at this speed.
+
 ## Application Architecture
 
 This application is a fullstack Postgres, Express, React.js/Redux, and Node.js application. The backend interacts with the frontend by responding to frontend fetch requests, and fetching data from the Postgres database. The frontend displays this information to the user.
