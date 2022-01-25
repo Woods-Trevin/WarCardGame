@@ -13,6 +13,7 @@ const deck = require('../../deck');
 function Mainpage() {
     const [shuffledDeck, setShuffledDeck] = useState();
     // console.log(shuffledDeck);
+
     const [playerOneCards, setPlayerOneCards] = useState();
     const [playerTwoCards, setPlayerTwoCards] = useState();
     const dispatch = useDispatch();
@@ -28,25 +29,25 @@ function Mainpage() {
 
 
     function shuffle(deck) {
-        // let currentIndex = deck.length;
-        // let randomIndex = 0;
+        let currentIndex = deck.length;
+        let randomIndex = 0;
 
-        // // O(n)
-        // while (currentIndex !== 0) {
-        //     randomIndex = Math.floor(Math.random() * (currentIndex + 1));
-        //     currentIndex--;
+        // O(n)
+        while (currentIndex !== 0) {
+            randomIndex = Math.floor(Math.random() * (currentIndex + 1));
+            currentIndex--;
 
-        //     [deck[currentIndex], deck[randomIndex]] = [deck[randomIndex], deck[currentIndex]]
-        // }
-
-        for (let i = deck.length - 1; i > 0; i--) {
-            const randomIndex = Math.floor(Math.random() * (i + 1));
-            const otherVal = deck[randomIndex]
-            deck[randomIndex] = deck[i]
-            deck[i] = otherVal
-
+            [deck[currentIndex], deck[randomIndex]] = [deck[randomIndex], deck[currentIndex]]
         }
-        // console.log(deck);
+
+        // for (let i = deck.length - 1; i > 0; i--) {
+        //     const randomIndex = Math.floor(Math.random() * (i + 1));
+        //     const otherVal = deck[randomIndex]
+        //     deck[randomIndex] = deck[i]
+        //     deck[i] = otherVal
+
+        // }
+        console.log(deck);
         return deck;
 
     }
@@ -360,7 +361,7 @@ function Mainpage() {
                     return () => clearTimeout(timeout)
                 }
 
-                if (pOneFaceUp !== pTwoFaceUp) {
+                if (pOneFaceUp?.number !== pTwoFaceUp?.number) {
                     const potArray = battle(pOneFaceUp, pTwoFaceUp)
                     console.log(potArray, "FINAL POT ARRAY WHEN SOMEONE WINS")
                     dispatch(playerDecks.addToPot({ drawnCards: potArray }))
@@ -370,14 +371,18 @@ function Mainpage() {
                     }, OPERATIONSPEED)
                     return () => clearTimeout(timeout)
                 }
-                //getting all facedown cards after cards already held in pot
+                // getting all facedown cards after cards already held in pot
                 let fd1 = 1
                 let fd2 = 2
                 let fd3 = 3
 
-                let potArray = [];
 
-                while (pOneFaceUp === pTwoFaceUp) {
+                let potArray = [];
+                const pOneFUCardVal = translateFC(pOneFaceUp?.number)
+                const pTwoFUCardVal = translateFC(pTwoFaceUp?.number)
+
+
+                while ((pOneFUCardVal === pTwoFUCardVal) && (pOneFUCardVal === undefined || pTwoFUCardVal === undefined)) {
 
                     let pOneFaceDownOne = pOneDeck[fd1]
                     let pOneFaceDownTwo = pOneDeck[fd2]
@@ -404,32 +409,29 @@ function Mainpage() {
                     fd3 += new_fu
 
                 }
-                console.log(potArray, "FINAL POT ARRAY")
+                console.log(potArray, "FINAL POT ARRAY WHEN MORE THAN ONE WAR")
 
                 let pOneFUVal = translateFC(pOneFaceUp.number)
                 let pTwoFUVal = translateFC(pTwoFaceUp.number)
 
-                if (potArray) {
-                    if (pOneFUVal < pTwoFUVal) {
-                        sessionStorage.setItem('winner', 2)
-                        dispatch(playerDecks.addToPot({ drawnCards: potArray }))
-                        const timeout = setTimeout(() => {
-                            sessionStorage.setItem('war', 'War')
-                            sessionStorage.setItem('phase', Phase.Distribution)
-                            setPhase(Phase.Distribution)
-                        }, OPERATIONSPEED)
-                        return () => clearTimeout(timeout)
-                    } else {
-                        sessionStorage.setItem('winner', 1)
-                        dispatch(playerDecks.addToPot({ drawnCards: potArray }))
-                        const timeout = setTimeout(() => {
-                            sessionStorage.setItem('war', 'War')
-                            sessionStorage.setItem('phase', Phase.Distribution)
-                            setPhase(Phase.Distribution)
-                        }, OPERATIONSPEED)
-                        return () => clearTimeout(timeout)
-                    }
-
+                if ((pOneFUVal < pTwoFUVal)) {
+                    sessionStorage.setItem('winner', 2)
+                    dispatch(playerDecks.addToPot({ drawnCards: potArray }))
+                    const timeout = setTimeout(() => {
+                        sessionStorage.setItem('war', 'War')
+                        sessionStorage.setItem('phase', Phase.Distribution)
+                        setPhase(Phase.Distribution)
+                    }, OPERATIONSPEED)
+                    return () => clearTimeout(timeout)
+                } else {
+                    sessionStorage.setItem('winner', 1)
+                    dispatch(playerDecks.addToPot({ drawnCards: potArray }))
+                    const timeout = setTimeout(() => {
+                        sessionStorage.setItem('war', 'War')
+                        sessionStorage.setItem('phase', Phase.Distribution)
+                        setPhase(Phase.Distribution)
+                    }, OPERATIONSPEED)
+                    return () => clearTimeout(timeout)
                 }
 
                 return;
@@ -503,7 +505,7 @@ function Mainpage() {
                 if (data) {
                     const timeout = setTimeout(() => {
                         setPhase(Phase.Reset)
-                        sessionStorage.removeItem('phase')
+                        sessionStorage.setItem('phase', Phase.Reset)
                     }, OPERATIONSPEED)
                     return () => clearTimeout(timeout)
                 }
@@ -642,15 +644,15 @@ function Mainpage() {
                 <div className="pf--two">
                     <div className="playerTwo_pf_card card-slot1">
                         <div className="top_suit_ctnr--right">
-                            <li className="card_num" >{pTwoCardNumber}</li>
                             <img src={(pTwoCardSuit === 'Club' ? club : undefined) || (pTwoCardSuit === 'Heart' ? heart : undefined) || (pTwoCardSuit === 'Diamond' ? diamond : undefined) || (pTwoCardSuit === 'Spade' ? spade : undefined)} className="suit--top" />
+                            <li className="card_num" >{pTwoCardNumber}</li>
                         </div>
                         <div className="mid_suit_ctnr">
                             <img src={(pTwoCardSuit === 'Club' ? club : undefined) || (pTwoCardSuit === 'Heart' ? heart : undefined) || (pTwoCardSuit === 'Diamond' ? diamond : undefined) || (pTwoCardSuit === 'Spade' ? spade : undefined)} className="suit--mid" />
                         </div>
                         <div className="bottom_suit_ctnr--right">
-                            <img src={(pTwoCardSuit === 'Club' ? club : undefined) || (pTwoCardSuit === 'Heart' ? heart : undefined) || (pTwoCardSuit === 'Diamond' ? diamond : undefined) || (pTwoCardSuit === 'Spade' ? spade : undefined)} className="suit--bottom" />
                             <li className="card_num">{pTwoCardNumber}</li>
+                            <img src={(pTwoCardSuit === 'Club' ? club : undefined) || (pTwoCardSuit === 'Heart' ? heart : undefined) || (pTwoCardSuit === 'Diamond' ? diamond : undefined) || (pTwoCardSuit === 'Spade' ? spade : undefined)} className="suit--bottom" />
                         </div>
                     </div>
                     {phase === Phase.War &&

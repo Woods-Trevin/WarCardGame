@@ -2,6 +2,9 @@
   "name": "war_card_game",
   "version": "0.1.0",
   "private": true,
+  "directories": {
+    "tests": "tests"
+  },
   "dependencies": {
     "@testing-library/jest-dom": "^5.16.1",
     "@testing-library/react": "^12.1.2",
@@ -19,7 +22,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test",
+    "test": "mocha tests",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
@@ -40,5 +43,9 @@
       "last 1 safari version"
     ]
   },
-  "proxy": "http://localhost:8080"
+  "proxy": "http://localhost:8080",
+  "devDependencies": {
+    "chai": "^4.3.4",
+    "mocha": "^9.2.0"
+  }
 }
