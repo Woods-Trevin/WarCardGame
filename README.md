@@ -16,7 +16,7 @@ If a player runs out of cards or does not have enough cards for the war phase, t
 
 
 
-## GAME TAKES ANYWHERE FROM 5-20 MINUTES TO FINISH!! Kick back and let it run in the browser while you watch an episode of the new Witcher season on netflix ;).
+## GAME TAKES ANYWHERE FROM 5-30 MINUTES TO FINISH!! Kick back and let it run in the browser while you watch an episode of the new Witcher season on netflix ;).
 
 ## Setup
 
