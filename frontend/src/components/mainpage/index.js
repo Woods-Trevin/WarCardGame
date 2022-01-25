@@ -341,7 +341,7 @@ function Mainpage() {
                 console.log("REACHED WAR PHASE")
 
                 //getting 5th card at index 4
-                let new_fu = 4
+                let new_fu = 0
 
                 let pOneFaceUp = pOneDeck[new_fu]
                 setPOneCardSuit(pOneFaceUp?.suit)
@@ -424,8 +424,8 @@ function Mainpage() {
                     }, OPERATIONSPEED)
                     return () => clearTimeout(timeout)
                 } else {
-                    sessionStorage.setItem('winner', 1)
-                    dispatch(playerDecks.addToPot({ drawnCards: potArray }))
+                    // sessionStorage.setItem('winner', 1)
+                    // dispatch(playerDecks.addToPot({ drawnCards: potArray }))
                     const timeout = setTimeout(() => {
                         sessionStorage.setItem('war', 'War')
                         sessionStorage.setItem('phase', Phase.Distribution)

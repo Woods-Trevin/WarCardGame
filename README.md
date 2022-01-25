@@ -40,7 +40,7 @@ If a player runs out of cards or does not have enough cards for the war phase, t
 
 2. run `npm start` in seperate terminal in frontend directory
 
-3. Click `start game` to run simulation.
+3. Click `start game` on webpage to run simulation.
 
 ## Application Architecture
 
