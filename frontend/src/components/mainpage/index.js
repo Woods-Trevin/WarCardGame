@@ -34,7 +34,7 @@ function Mainpage() {
 
         // O(n)
         while (currentIndex !== 0) {
-            randomIndex = Math.floor(Math.random() * (currentIndex + 1));
+            randomIndex = Math.floor(Math.random() * currentIndex);
             currentIndex--;
 
             [deck[currentIndex], deck[randomIndex]] = [deck[randomIndex], deck[currentIndex]]
