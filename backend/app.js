@@ -221,7 +221,7 @@ app.delete('/war/deleteAndAddCards/', asyncHandler(async (req, res) => {
     }
 
     if (winner === 2) {
-        for (let i = 0; i < currentPot.length; i++) {
+        for (let i = currentPot.length - 1; i >= 0; i--) {
             let currentCard = currentPot[i]
             await PlayerDeckTwo.create({
                 association: currentCard.association,
