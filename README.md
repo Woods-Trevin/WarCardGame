@@ -102,7 +102,7 @@ GET '/war/victory'
 
 
 #### Postgres
-Postgres was an easy choice for my server-side framework. Postgres allows easy communication between the database and the backend server. I find it very straightforward to use.
+Postgres was an easy choice for my database. Postgres allows you to store large and sophisticated data safely. It helps developers to build the most complex applications, run administrative tasks and create integral environments. I find it very straightforward to use.
 
 
 
